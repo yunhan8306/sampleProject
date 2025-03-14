@@ -32,10 +32,6 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
                 configurePrintApksTask(this)
                 disableUnnecessaryAndroidTests(target)
             }
-            dependencies {
-                "androidTestImplementation"(libs.findLibrary("kotlin.test").get())
-                "testImplementation"(libs.findLibrary("kotlin.test").get())
-            }
         }
     }
 }
