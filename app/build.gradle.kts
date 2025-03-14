@@ -8,6 +8,12 @@ android {
     namespace = "com.yunhan.sample"
     compileSdk = 35
 
+    packagingOptions {
+        resources {
+            excludes += "META-INF/versions/9/OSGI-INF/MANIFEST.MF"
+        }
+    }
+
     defaultConfig {
         applicationId = "com.yunhan.sample"
         minSdk = 29
@@ -40,17 +46,14 @@ android {
 }
 
 dependencies {
+
+    implementation(projects.presentation.navigation)
+
     // Core AndroidX
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtimeCompose)
     implementation(libs.androidx.activity.compose)
-
-    // Jetpack Compose
-//    implementation(platform(libs.androidx.compose.bom))
-//    implementation(libs.androidx.compose.foundation)
-//    implementation(libs.androidx.compose.material3)
-//    implementation(libs.androidx.compose.runtime)
-//    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.navigation.compose)
 
     // Hilt
     implementation(libs.hilt.android)
@@ -67,8 +70,4 @@ dependencies {
     testImplementation(libs.junit4)
     androidTestImplementation(libs.androidx.test.espresso.core)
     androidTestImplementation(libs.androidx.test.junit)
-//    androidTestImplementation(platform(libs.androidx.compose.bom))
-//    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
-//    debugImplementation(libs.androidx.compose.ui.tooling)
-//    debugImplementation(libs.androidx.compose.ui.test.manifest)
 }

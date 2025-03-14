@@ -59,5 +59,9 @@ gradlePlugin {
             id = libs.plugins.sample.hilt.get().pluginId
             implementationClass = "HiltConventionPlugin"
         }
+        register("androidPresentation") {
+            id = libs.plugins.sample.android.presentation.get().pluginId
+            implementationClass = "AndroidPresentationConventionPlugin"
+        }
     }
 }
