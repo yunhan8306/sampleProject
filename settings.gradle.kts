@@ -23,5 +23,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "sample"
 include(":app")
-//include(":build-logic:convention")
-include(":buildlogic")
+include(":presentation:navigation")
