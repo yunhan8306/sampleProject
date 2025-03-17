@@ -25,3 +25,4 @@ rootProject.name = "sample"
 include(":app")
 include(":presentation:navigation")
 include(":presentation:detail")
+include(":presentation:base")
