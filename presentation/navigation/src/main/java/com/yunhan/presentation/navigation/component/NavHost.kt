@@ -1,4 +1,4 @@
-package com.yunhan.presentation.navigation
+package com.yunhan.presentation.navigation.component
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
@@ -6,7 +6,7 @@ import androidx.navigation.compose.NavHost
 import com.yunhan.presentation.navigation.SampleNavType
 
 @Composable
-fun SampleNavHost(
+fun NavHost(
     navHostController: NavHostController
 ) {
     NavHost(

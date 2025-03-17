@@ -1,4 +1,4 @@
-package com.yunhan.presentation.navigation
+package com.yunhan.presentation.navigation.component
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -14,7 +14,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.yunhan.presentation.navigation.SampleNavType
 
 @Composable
-fun SampleNavigation(
+fun Navigation(
     navController: NavHostController
 ) {
 

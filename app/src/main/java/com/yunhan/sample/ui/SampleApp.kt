@@ -7,8 +7,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
-import com.yunhan.presentation.navigation.SampleNavHost
-import com.yunhan.presentation.navigation.SampleNavigation
+import com.yunhan.presentation.navigation.component.NavHost
+import com.yunhan.presentation.navigation.component.Navigation
 
 @Composable
 fun SampleApp(
@@ -18,7 +18,7 @@ fun SampleApp(
 
     Scaffold(
         bottomBar = {
-            SampleNavigation(navHostController)
+            Navigation(navHostController)
         }
     ) { paddingValues ->
         Surface(
@@ -26,7 +26,7 @@ fun SampleApp(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            SampleNavHost(
+            NavHost(
                 navHostController = navHostController,
             )
         }
