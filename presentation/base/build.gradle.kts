@@ -1,6 +1,5 @@
 plugins {
     alias(libs.plugins.sample.android.library)
-    alias(libs.plugins.sample.android.presentation)
     alias(libs.plugins.sample.android.test)
 }
 
@@ -11,4 +10,5 @@ android {
 dependencies {
 
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.lifecycle.viewModelCompose)
 }
