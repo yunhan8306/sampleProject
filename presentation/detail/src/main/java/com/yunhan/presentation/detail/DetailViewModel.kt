@@ -1,36 +1,34 @@
 package com.yunhan.presentation.detail
 
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.yunhan.presentation.detail.component.DetailSideEffect
-import com.yunhan.presentation.detail.component.DetailState
+import com.yunhan.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.delay
 import javax.inject.Inject
 
 @HiltViewModel
 class DetailViewModel @Inject constructor(
     private val stateHandle: SavedStateHandle,
-) : ViewModel() {
+) : BaseViewModel<DetailState, DetailSideEffect, DetailAction>(DetailState.init) {
 
-    private val _state: MutableStateFlow<DetailState> = MutableStateFlow(DetailState())
-    val state = _state.asStateFlow()
-
-    private val _sideEffect: MutableSharedFlow<DetailSideEffect> = MutableSharedFlow()
-    val sideEffect = _sideEffect.asSharedFlow()
-
-    private fun fetch() {
-        viewModelScope.launch {
-            _state.emit(DetailState(stateHandle.get<String>("from") ?: "error"))
+    override fun onAction(action: DetailAction) {
+        when(action) {
+            else -> Unit
         }
     }
 
     init {
-        fetch()
+        viewModelScope.fetch(
+            onInit = {
+                delay(1000)
+            },
+            onLoading = {
+                delay(1000)
+            },
+            onSuccess = {
+                reduce(currentState.copy(text = stateHandle.get<String>("from") ?: "error"))
+            }
+        )
     }
 }

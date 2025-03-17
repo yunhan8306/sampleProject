@@ -9,6 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.yunhan.presentation.detail.DetailState
 import com.yunhan.presentation.detail.DetailViewModel
 
 @Composable
@@ -32,7 +33,7 @@ fun DetailScreen(
         contentAlignment = Alignment.Center
     ) {
         Box {
-            Text(state.text + " - Detail")
+            Text("${state.status} - ${state.text}")
         }
     }
 }
