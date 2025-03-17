@@ -24,3 +24,4 @@ dependencyResolutionManagement {
 rootProject.name = "sample"
 include(":app")
 include(":presentation:navigation")
+include(":presentation:detail")
