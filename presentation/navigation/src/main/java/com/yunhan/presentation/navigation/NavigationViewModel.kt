@@ -1,27 +1,25 @@
 package com.yunhan.presentation.navigation
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.yunhan.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class NavigationViewModel @Inject constructor(
 
-) : ViewModel() {
+) : BaseViewModel<NavigationState, NavigationSideEffect, NavigationAction>(NavigationState.init) {
 
-    private val _state: MutableStateFlow<NavigationState> = MutableStateFlow(NavigationState())
-    val state = _state.asStateFlow()
+    private var _sampleNavType: SampleNavType = SampleNavType.TEST1
+    private val sampleNavType: SampleNavType get() = _sampleNavType
 
-    private val _sideEffect: MutableSharedFlow<NavigationSideEffect> = MutableSharedFlow()
-    val sideEffect = _sideEffect.asSharedFlow()
+    fun setSampleNav(sampleNavType: SampleNavType) {
+        _sampleNavType = sampleNavType
+    }
 
-    fun onAction(action: NavigationAction) {
+    override fun onAction(action: NavigationAction) {
         when(action) {
             is NavigationAction.StartDetailActivity -> {
                 startDetailActivity(action.sampleNavType)
@@ -32,13 +30,21 @@ class NavigationViewModel @Inject constructor(
 
     private fun startDetailActivity(sampleNavType: SampleNavType) {
         viewModelScope.launch {
-            _sideEffect.emit(NavigationSideEffect.StartDetailActivity(sampleNavType))
+            postSideEffect(NavigationSideEffect.StartDetailActivity(sampleNavType))
         }
     }
 
-    fun fetch(sampleNavType: SampleNavType) {
-        viewModelScope.launch {
-            _state.emit(NavigationState(sampleNavType))
-        }
+    init {
+        viewModelScope.fetch(
+            onInit = {
+                delay(1000)
+            },
+            onLoading = {
+                delay(1000)
+            },
+            onSuccess = {
+                reduce(currentState.copy(sampleNavType = sampleNavType))
+            }
+        )
     }
 }

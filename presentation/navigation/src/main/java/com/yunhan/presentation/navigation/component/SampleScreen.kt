@@ -50,7 +50,7 @@ fun SampleRoute(
     val state by viewModel.state.collectAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.fetch(sampleNavType)
+        viewModel.setSampleNav(sampleNavType)
     }
 
     LaunchedEffect(Unit) {
@@ -87,7 +87,7 @@ fun SampleScreen(
                 .padding(20.dp)
                 .clickable { onAction.invoke(NavigationAction.StartDetailActivity(state.sampleNavType)) }
         ) {
-            Text(state.sampleNavType.name)
+            Text("${state.status} - ${state.sampleNavType.name}")
         }
     }
 }
