@@ -27,6 +27,7 @@
             <option value="$PROJECT_DIR$/build-logic/convention" />
             <option value="$PROJECT_DIR$/presentation" />
             <option value="$PROJECT_DIR$/presentation/base" />
+            <option value="$PROJECT_DIR$/presentation/designsystem" />
             <option value="$PROJECT_DIR$/presentation/detail" />
             <option value="$PROJECT_DIR$/presentation/navigation" />
           </set>

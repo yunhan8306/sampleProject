@@ -22,6 +22,7 @@ class AndroidPresentationConventionPlugin : Plugin<Project> {
 
             dependencies {
                 "implementation"(project(":presentation:base"))
+                "implementation"(project(":presentation:designsystem"))
 
                 "implementation"(libs.findLibrary("androidx.lifecycle.runtimeCompose").get())
                 "implementation"(libs.findLibrary("androidx.lifecycle.viewModelCompose").get())
