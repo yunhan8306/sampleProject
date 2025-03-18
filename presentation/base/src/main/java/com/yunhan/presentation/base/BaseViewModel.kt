@@ -2,7 +2,6 @@ package com.yunhan.presentation.base
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.test.core.app.ActivityScenario.launch
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
@@ -14,6 +13,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.coroutines.EmptyCoroutineContext
 
 abstract class BaseViewModel<STATE: BaseState, SIDE_EFFECT: BaseSideEffect, ACTION: BaseAction>(
@@ -31,7 +31,7 @@ abstract class BaseViewModel<STATE: BaseState, SIDE_EFFECT: BaseSideEffect, ACTI
     private val _isShowLoading = MutableStateFlow(false)
     val isShowLoading = _isShowLoading.asStateFlow()
 
-    private val jobList = mutableListOf<Job>()
+    private val jobList = CopyOnWriteArrayList<Job>()
 
     suspend fun reduce(state: STATE) {
         _state.emit(state)
@@ -111,6 +111,7 @@ abstract class BaseViewModel<STATE: BaseState, SIDE_EFFECT: BaseSideEffect, ACTI
     }
 
     fun cancelJobList() {
+        if(jobList.isEmpty()) return
         jobList.forEach { it.cancel() }
         jobList.clear()
     }
