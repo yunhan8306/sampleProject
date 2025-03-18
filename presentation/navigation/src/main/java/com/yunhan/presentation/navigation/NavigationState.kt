@@ -23,5 +23,6 @@ sealed interface NavigationSideEffect: BaseSideEffect {
 }
 
 sealed interface NavigationAction: BaseAction {
+    data object CancelLoading : NavigationAction
     data class StartDetailActivity(val sampleNavType: SampleNavType) : NavigationAction
 }

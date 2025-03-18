@@ -4,7 +4,6 @@ import androidx.lifecycle.viewModelScope
 import com.yunhan.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,12 +23,18 @@ class NavigationViewModel @Inject constructor(
             is NavigationAction.StartDetailActivity -> {
                 startDetailActivity(action.sampleNavType)
             }
+            is NavigationAction.CancelLoading -> {
+                cancelJobList()
+            }
             else -> Unit
         }
     }
 
     private fun startDetailActivity(sampleNavType: SampleNavType) {
-        viewModelScope.launch {
+        viewModelScope.intent(
+            isShowLoading = true
+        ) {
+            delay(3000)
             postSideEffect(NavigationSideEffect.StartDetailActivity(sampleNavType))
         }
     }

@@ -17,15 +17,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.yunhan.presentation.detail.DetailActivity
-import com.yunhan.presentation.navigation.SampleNavType
 import com.yunhan.presentation.navigation.NavigationAction
 import com.yunhan.presentation.navigation.NavigationSideEffect
 import com.yunhan.presentation.navigation.NavigationState
 import com.yunhan.presentation.navigation.NavigationViewModel
+import com.yunhan.presentation.navigation.SampleNavType
 import kotlinx.coroutines.flow.collectLatest
 
 fun NavGraphBuilder.sampleScreen(
@@ -48,6 +49,7 @@ fun SampleRoute(
 
     val activity = LocalContext.current as ComponentActivity
     val state by viewModel.state.collectAsState()
+    val isShowLoading by viewModel.isShowLoading.collectAsState()
 
     LaunchedEffect(Unit) {
         viewModel.setSampleNav(sampleNavType)
@@ -70,6 +72,22 @@ fun SampleRoute(
         state = state,
         onAction = viewModel::onAction
     )
+
+    if(isShowLoading) {
+        Dialog(
+            onDismissRequest = {
+                viewModel.onAction(NavigationAction.CancelLoading)
+            }
+        ) {
+            Box(
+                modifier = Modifier
+                    .background(Color.Yellow)
+                    .padding(50.dp)
+            ) {
+                Text("Job Loading...")
+            }
+        }
+    }
 }
 
 @Composable
