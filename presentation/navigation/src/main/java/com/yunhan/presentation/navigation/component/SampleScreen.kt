@@ -21,6 +21,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.yunhan.presentation.designsystem.component.loading.CommonLoadingDialog
 import com.yunhan.presentation.detail.DetailActivity
 import com.yunhan.presentation.navigation.NavigationAction
 import com.yunhan.presentation.navigation.NavigationSideEffect
@@ -73,21 +74,10 @@ fun SampleRoute(
         onAction = viewModel::onAction
     )
 
-    if(isShowLoading) {
-        Dialog(
-            onDismissRequest = {
-                viewModel.onAction(NavigationAction.CancelLoading)
-            }
-        ) {
-            Box(
-                modifier = Modifier
-                    .background(Color.Yellow)
-                    .padding(50.dp)
-            ) {
-                Text("Job Loading...")
-            }
-        }
-    }
+    CommonLoadingDialog(
+        isLoading = isShowLoading,
+        onDismiss = { viewModel.onAction(NavigationAction.CancelLoading) }
+    )
 }
 
 @Composable
