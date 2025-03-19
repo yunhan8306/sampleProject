@@ -42,7 +42,7 @@ class NavigationViewModel @Inject constructor(
     init {
         viewModelScope.fetch(
             onStart = {
-                delay(1000)
+                delay(3000)
             },
             onRendering = {
                 delay(1000)

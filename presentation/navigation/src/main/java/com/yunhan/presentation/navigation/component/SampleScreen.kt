@@ -21,8 +21,10 @@ import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.yunhan.presentation.base.BaseStatus
 import com.yunhan.presentation.designsystem.component.loading.CommonLoadingDialog
 import com.yunhan.presentation.detail.DetailActivity
+import com.yunhan.presentation.detail.component.DetailScreen
 import com.yunhan.presentation.navigation.NavigationAction
 import com.yunhan.presentation.navigation.NavigationSideEffect
 import com.yunhan.presentation.navigation.NavigationState
@@ -69,10 +71,19 @@ fun SampleRoute(
         }
     }
 
-    SampleScreen(
-        state = state,
-        onAction = viewModel::onAction
-    )
+    when(state.status) {
+        BaseStatus.Idle -> Unit
+        BaseStatus.Rendering -> {
+            SampleSkeletonScreen()
+        }
+        BaseStatus.Complete -> {
+            SampleScreen(
+                state = state,
+                onAction = viewModel::onAction
+            )
+        }
+        else -> Unit
+    }
 
     CommonLoadingDialog(
         isLoading = isShowLoading,
