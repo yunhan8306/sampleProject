@@ -41,13 +41,13 @@ class NavigationViewModel @Inject constructor(
 
     init {
         viewModelScope.fetch(
-            onInit = {
+            onStart = {
                 delay(1000)
             },
-            onLoading = {
+            onRendering = {
                 delay(1000)
             },
-            onSuccess = {
+            onComplete = {
                 reduce(currentState.copy(sampleNavType = sampleNavType))
             }
         )

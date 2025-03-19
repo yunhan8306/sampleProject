@@ -67,9 +67,9 @@ abstract class BaseViewModel<STATE: BaseState, SIDE_EFFECT: BaseSideEffect, ACTI
 
     @Suppress("UNCHECKED_CAST")
     fun CoroutineScope.fetch(
-        onInit: suspend () -> Unit = {}, // api 호출, 로컬 데이터 세팅 등 초기 작업,
-        onLoading: suspend () -> Unit = {}, // 스켈레톤 등 로딩 처리
-        onSuccess: suspend () -> Unit = {}, // 세팅 후 처리
+        onStart: suspend () -> Unit = {}, // api 호출, 로컬 데이터 세팅 등 초기 작업,
+        onRendering: suspend () -> Unit = {}, // 스켈레톤 등 렌더링 될 때 필요한 처리
+        onComplete: suspend () -> Unit = {}, // 세팅 후 처리
         onError: (Throwable) -> Unit = {} // 세팅 오류 처리
     ) {
         launch(
@@ -77,14 +77,14 @@ abstract class BaseViewModel<STATE: BaseState, SIDE_EFFECT: BaseSideEffect, ACTI
                 onError.invoke(throwable)
             }
         ) {
-            onInit.invoke()
+            launch { onStart.invoke() }
             coroutineScope {
-                reduce(currentState.loading() as STATE)
-                onLoading.invoke()
+                reduce(currentState.rendering() as STATE)
+                onRendering.invoke()
             }
             coroutineScope {
-                reduce(_state.value.success() as STATE)
-                onSuccess.invoke()
+                reduce(_state.value.complete() as STATE)
+                onComplete.invoke()
             }
         }
     }
