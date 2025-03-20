@@ -7,8 +7,6 @@ interface BaseState {
     fun error(): BaseState
 }
 
-
-
 abstract class BaseStateImpl<T : BaseState>(
     override val status: BaseStatus = BaseStatus.Idle
 ) : BaseState {
@@ -25,10 +23,6 @@ sealed interface BaseStatus {
     data object Error : BaseStatus
 }
 
-interface BaseSideEffect {
+interface BaseSideEffect
 
-}
-
-interface BaseAction {
-
-}
+interface BaseAction

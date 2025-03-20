@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.coroutines.EmptyCoroutineContext
@@ -33,8 +34,8 @@ abstract class BaseViewModel<STATE: BaseState, SIDE_EFFECT: BaseSideEffect, ACTI
 
     private val jobList = CopyOnWriteArrayList<Job>()
 
-    suspend fun reduce(state: STATE) {
-        _state.emit(state)
+    fun reduce(state: STATE) {
+        _state.update { state }
     }
 
     suspend fun postSideEffect(sideEffect: SIDE_EFFECT) {
@@ -77,8 +78,8 @@ abstract class BaseViewModel<STATE: BaseState, SIDE_EFFECT: BaseSideEffect, ACTI
                 onError.invoke(throwable)
             }
         ) {
-            launch { onStart.invoke() }
             coroutineScope {
+                launch { onStart.invoke() }
                 reduce(currentState.rendering() as STATE)
                 onRendering.invoke()
             }
