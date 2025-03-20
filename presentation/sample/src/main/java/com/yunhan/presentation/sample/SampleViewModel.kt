@@ -1,14 +1,17 @@
 package com.yunhan.presentation.sample
 
+import android.content.Context
 import androidx.lifecycle.viewModelScope
 import com.yunhan.presentation.base.BaseViewModel
+import com.yunhan.presentation.util.navigator.ActivityNavigator
+import com.yunhan.presentation.util.navigator.ActivityNavigatorType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import javax.inject.Inject
 
 @HiltViewModel
 class SampleViewModel @Inject constructor(
-
+    private val activityNavigator: ActivityNavigator
 ) : BaseViewModel<SampleState, SampleSideEffect, SampleAction>(SampleState.init) {
 
     private var _sampleNavType: SampleNavType = SampleNavType.TEST1
@@ -21,7 +24,7 @@ class SampleViewModel @Inject constructor(
     override fun onAction(action: SampleAction) {
         when(action) {
             is SampleAction.StartDetailActivity -> {
-                startDetailActivity(action.sampleNavType)
+                startDetailActivity(action.context, action.sampleNavType)
             }
             is SampleAction.CancelLoading -> {
                 cancelJobList()
@@ -30,12 +33,14 @@ class SampleViewModel @Inject constructor(
         }
     }
 
-    private fun startDetailActivity(sampleNavType: SampleNavType) {
+    private fun startDetailActivity(context: Context, sampleNavType: SampleNavType) {
         viewModelScope.intent(
             isShowLoading = true
         ) {
             delay(3000)
-            postSideEffect(SampleSideEffect.StartDetailActivity(sampleNavType))
+            activityNavigator.navigateTo(context, ActivityNavigatorType.DETAIL)
+                .putExtra("from", sampleNavType.name)
+                .let { postSideEffect(SampleSideEffect.StartDetailActivity(it)) }
         }
     }
 

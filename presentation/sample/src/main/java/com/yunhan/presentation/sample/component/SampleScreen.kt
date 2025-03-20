@@ -60,9 +60,7 @@ fun SampleRoute(
         viewModel.sideEffect.collectLatest { sideEffect ->
             when(sideEffect) {
                 is SampleSideEffect.StartDetailActivity -> {
-                    Intent(activity, DetailActivity::class.java)
-                        .putExtra("from", sideEffect.sampleNavType.name)
-                        .apply { activity.startActivity(this) }
+                    sideEffect.intent.apply { activity.startActivity(this) }
                 }
                 else -> Unit
             }
@@ -94,6 +92,8 @@ fun SampleScreen(
     state: SampleState,
     onAction: (SampleAction) -> Unit
 ) {
+    val activity = LocalContext.current as ComponentActivity
+
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
@@ -102,7 +102,7 @@ fun SampleScreen(
             modifier = Modifier
                 .background(Color.Gray)
                 .padding(20.dp)
-                .clickable { onAction.invoke(SampleAction.StartDetailActivity(state.sampleNavType)) }
+                .clickable { onAction.invoke(SampleAction.StartDetailActivity(activity, state.sampleNavType)) }
         ) {
             Text("${state.status} - ${state.sampleNavType.name}")
         }

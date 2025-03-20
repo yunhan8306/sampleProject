@@ -1,5 +1,7 @@
 package com.yunhan.presentation.sample
 
+import android.content.Context
+import android.content.Intent
 import com.yunhan.presentation.base.BaseAction
 import com.yunhan.presentation.base.BaseSideEffect
 import com.yunhan.presentation.base.BaseStateImpl
@@ -19,10 +21,10 @@ data class SampleState(
 }
 
 sealed interface SampleSideEffect: BaseSideEffect {
-    data class StartDetailActivity(val sampleNavType: SampleNavType) : SampleSideEffect
+    data class StartDetailActivity(val intent: Intent) : SampleSideEffect
 }
 
 sealed interface SampleAction: BaseAction {
     data object CancelLoading : SampleAction
-    data class StartDetailActivity(val sampleNavType: SampleNavType) : SampleAction
+    data class StartDetailActivity(val context: Context, val sampleNavType: SampleNavType) : SampleAction
 }
