@@ -48,6 +48,7 @@ android {
 dependencies {
 
     implementation(projects.presentation.navigation)
+    implementation(projects.presentation.di)
 
     // Core AndroidX
     implementation(libs.androidx.core.ktx)

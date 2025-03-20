@@ -29,6 +29,7 @@
             <option value="$PROJECT_DIR$/presentation/base" />
             <option value="$PROJECT_DIR$/presentation/designsystem" />
             <option value="$PROJECT_DIR$/presentation/detail" />
+            <option value="$PROJECT_DIR$/presentation/di" />
             <option value="$PROJECT_DIR$/presentation/impl" />
             <option value="$PROJECT_DIR$/presentation/navigation" />
             <option value="$PROJECT_DIR$/presentation/sample" />

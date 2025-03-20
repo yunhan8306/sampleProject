@@ -5,13 +5,16 @@ plugins {
 }
 
 android {
-    namespace = "com.yunhan.presentation.impl"
+    namespace = "com.yunhan.presentation.di"
 }
 
 dependencies {
+//    implementation(projects.presentation.navigation)
     implementation(projects.presentation.detail)
+//    implementation(projects.presentation.sample)
 
     implementation(projects.presentation.util)
+    implementation(projects.presentation.impl)
 
     implementation(libs.androidx.core.ktx)
 }
