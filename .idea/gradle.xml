@@ -31,6 +31,7 @@
             <option value="$PROJECT_DIR$/presentation/detail" />
             <option value="$PROJECT_DIR$/presentation/navigation" />
             <option value="$PROJECT_DIR$/presentation/sample" />
+            <option value="$PROJECT_DIR$/presentation/util" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="false" />

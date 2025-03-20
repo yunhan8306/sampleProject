@@ -1,10 +1,10 @@
 plugins {
-    alias(libs.plugins.sample.android.library.compose)
+    alias(libs.plugins.sample.android.library)
     alias(libs.plugins.sample.android.test)
 }
 
 android {
-    namespace = "com.yunhan.presentation.designsystem"
+    namespace = "com.yunhan.presentation.util"
 }
 
 dependencies {
