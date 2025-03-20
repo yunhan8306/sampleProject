@@ -9,7 +9,7 @@ android {
 }
 
 dependencies {
-    implementation(projects.presentation.detail)
+    implementation(projects.presentation.sample)
 
     implementation(libs.androidx.core.ktx)
 }

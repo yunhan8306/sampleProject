@@ -1,4 +1,4 @@
-package com.yunhan.presentation.navigation.component
+package com.yunhan.presentation.sample.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column

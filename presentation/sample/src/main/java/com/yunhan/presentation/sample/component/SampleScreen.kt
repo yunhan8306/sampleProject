@@ -1,4 +1,4 @@
-package com.yunhan.presentation.navigation.component
+package com.yunhan.presentation.sample.component
 
 import android.content.Intent
 import androidx.activity.ComponentActivity
@@ -17,19 +17,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.yunhan.presentation.base.BaseStatus
 import com.yunhan.presentation.designsystem.component.loading.CommonLoadingDialog
 import com.yunhan.presentation.detail.DetailActivity
-import com.yunhan.presentation.detail.component.DetailScreen
-import com.yunhan.presentation.navigation.NavigationAction
-import com.yunhan.presentation.navigation.NavigationSideEffect
-import com.yunhan.presentation.navigation.NavigationState
-import com.yunhan.presentation.navigation.NavigationViewModel
-import com.yunhan.presentation.navigation.SampleNavType
+import com.yunhan.presentation.sample.SampleAction
+import com.yunhan.presentation.sample.SampleNavType
+import com.yunhan.presentation.sample.SampleSideEffect
+import com.yunhan.presentation.sample.SampleState
+import com.yunhan.presentation.sample.SampleViewModel
 import kotlinx.coroutines.flow.collectLatest
 
 fun NavGraphBuilder.sampleScreen(
@@ -46,7 +44,7 @@ fun NavGraphBuilder.sampleScreen(
 
 @Composable
 fun SampleRoute(
-    viewModel: NavigationViewModel = hiltViewModel(),
+    viewModel: SampleViewModel = hiltViewModel(),
     sampleNavType: SampleNavType
 ) {
 
@@ -61,7 +59,7 @@ fun SampleRoute(
     LaunchedEffect(Unit) {
         viewModel.sideEffect.collectLatest { sideEffect ->
             when(sideEffect) {
-                is NavigationSideEffect.StartDetailActivity -> {
+                is SampleSideEffect.StartDetailActivity -> {
                     Intent(activity, DetailActivity::class.java)
                         .putExtra("from", sideEffect.sampleNavType.name)
                         .apply { activity.startActivity(this) }
@@ -87,14 +85,14 @@ fun SampleRoute(
 
     CommonLoadingDialog(
         isLoading = isShowLoading,
-        onDismiss = { viewModel.onAction(NavigationAction.CancelLoading) }
+        onDismiss = { viewModel.onAction(SampleAction.CancelLoading) }
     )
 }
 
 @Composable
 fun SampleScreen(
-    state: NavigationState,
-    onAction: (NavigationAction) -> Unit
+    state: SampleState,
+    onAction: (SampleAction) -> Unit
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -104,7 +102,7 @@ fun SampleScreen(
             modifier = Modifier
                 .background(Color.Gray)
                 .padding(20.dp)
-                .clickable { onAction.invoke(NavigationAction.StartDetailActivity(state.sampleNavType)) }
+                .clickable { onAction.invoke(SampleAction.StartDetailActivity(state.sampleNavType)) }
         ) {
             Text("${state.status} - ${state.sampleNavType.name}")
         }

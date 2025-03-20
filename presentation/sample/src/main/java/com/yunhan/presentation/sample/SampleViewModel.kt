@@ -1,4 +1,4 @@
-package com.yunhan.presentation.navigation
+package com.yunhan.presentation.sample
 
 import androidx.lifecycle.viewModelScope
 import com.yunhan.presentation.base.BaseViewModel
@@ -7,9 +7,9 @@ import kotlinx.coroutines.delay
 import javax.inject.Inject
 
 @HiltViewModel
-class NavigationViewModel @Inject constructor(
+class SampleViewModel @Inject constructor(
 
-) : BaseViewModel<NavigationState, NavigationSideEffect, NavigationAction>(NavigationState.init) {
+) : BaseViewModel<SampleState, SampleSideEffect, SampleAction>(SampleState.init) {
 
     private var _sampleNavType: SampleNavType = SampleNavType.TEST1
     private val sampleNavType: SampleNavType get() = _sampleNavType
@@ -18,12 +18,12 @@ class NavigationViewModel @Inject constructor(
         _sampleNavType = sampleNavType
     }
 
-    override fun onAction(action: NavigationAction) {
+    override fun onAction(action: SampleAction) {
         when(action) {
-            is NavigationAction.StartDetailActivity -> {
+            is SampleAction.StartDetailActivity -> {
                 startDetailActivity(action.sampleNavType)
             }
-            is NavigationAction.CancelLoading -> {
+            is SampleAction.CancelLoading -> {
                 cancelJobList()
             }
             else -> Unit
@@ -35,7 +35,7 @@ class NavigationViewModel @Inject constructor(
             isShowLoading = true
         ) {
             delay(3000)
-            postSideEffect(NavigationSideEffect.StartDetailActivity(sampleNavType))
+            postSideEffect(SampleSideEffect.StartDetailActivity(sampleNavType))
         }
     }
 

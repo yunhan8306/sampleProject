@@ -3,7 +3,8 @@ package com.yunhan.presentation.navigation.component
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import com.yunhan.presentation.navigation.SampleNavType
+import com.yunhan.presentation.sample.SampleNavType
+import com.yunhan.presentation.sample.component.sampleScreen
 
 @Composable
 fun NavHost(

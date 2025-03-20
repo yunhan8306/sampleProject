@@ -1,4 +1,4 @@
-package com.yunhan.presentation.navigation
+package com.yunhan.presentation.sample
 
 enum class SampleNavType {
     TEST1,
