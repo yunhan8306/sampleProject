@@ -10,8 +10,11 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.concurrent.CopyOnWriteArrayList
@@ -22,7 +25,13 @@ abstract class BaseViewModel<STATE: BaseState, SIDE_EFFECT: BaseSideEffect, ACTI
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(initState)
-    val state = _state.asStateFlow()
+    val state = _state.onStart {
+        initFetch()
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000L),
+        initialValue = initState
+    )
 
     val currentState: STATE get() = state.value
 
@@ -33,6 +42,8 @@ abstract class BaseViewModel<STATE: BaseState, SIDE_EFFECT: BaseSideEffect, ACTI
     val isShowLoading = _isShowLoading.asStateFlow()
 
     private val jobList = CopyOnWriteArrayList<Job>()
+
+    open fun initFetch() {}
 
     fun reduce(state: STATE) {
         _state.update { state }
@@ -78,14 +89,15 @@ abstract class BaseViewModel<STATE: BaseState, SIDE_EFFECT: BaseSideEffect, ACTI
                 onError.invoke(throwable)
             }
         ) {
-            coroutineScope {
-                launch { onStart.invoke() }
-                reduce(currentState.rendering() as STATE)
-                onRendering.invoke()
-            }
-            coroutineScope {
-                reduce(_state.value.complete() as STATE)
-                onComplete.invoke()
+            launch {
+                coroutineScope {
+                    launch { onStart.invoke() }
+                    reduce(currentState.rendering() as STATE)
+                    onRendering.invoke()
+                }
+                reduce(currentState.complete() as STATE)
+            }.invokeOnCompletion {
+                launch { onComplete.invoke() }
             }
         }
     }

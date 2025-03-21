@@ -18,7 +18,7 @@ class DetailViewModel @Inject constructor(
         }
     }
 
-    init {
+    override fun initFetch() {
         viewModelScope.fetch(
             onStart = {
                 delay(1000)
