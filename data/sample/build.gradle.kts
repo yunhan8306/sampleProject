@@ -12,4 +12,6 @@ dependencies {
     implementation(projects.domain.sample)
 
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.datastore.preference)
+    implementation(libs.androidx.datastore.preference.core)
 }

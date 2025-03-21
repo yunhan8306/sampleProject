@@ -9,6 +9,7 @@ import com.yunhan.presentation.base.BaseStatus
 
 data class SampleState(
     val sampleNavType: SampleNavType = SampleNavType.TEST1,
+    val cnt: Int = 0,
     override val status: BaseStatus = BaseStatus.Idle,
 ): BaseStateImpl<SampleState>() {
     companion object {
@@ -26,5 +27,6 @@ sealed interface SampleSideEffect: BaseSideEffect {
 
 sealed interface SampleAction: BaseAction {
     data object CancelLoading : SampleAction
+    data object SendUp : SampleAction
     data class StartDetailActivity(val context: Context, val sampleNavType: SampleNavType) : SampleAction
 }

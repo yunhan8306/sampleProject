@@ -1,11 +1,14 @@
 package com.yunhan.presentation.sample.component
 
-import android.content.Intent
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,7 +25,6 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.yunhan.presentation.base.BaseStatus
 import com.yunhan.presentation.designsystem.component.loading.CommonLoadingDialog
-import com.yunhan.presentation.detail.DetailActivity
 import com.yunhan.presentation.sample.SampleAction
 import com.yunhan.presentation.sample.SampleNavType
 import com.yunhan.presentation.sample.SampleSideEffect
@@ -94,10 +96,11 @@ fun SampleScreen(
 ) {
     val activity = LocalContext.current as ComponentActivity
 
-    Box(
+    Column(
         modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Spacer(modifier = Modifier.weight(1f))
         Box(
             modifier = Modifier
                 .background(Color.Gray)
@@ -106,5 +109,27 @@ fun SampleScreen(
         ) {
             Text("${state.status} - ${state.sampleNavType.name}")
         }
+        Spacer(modifier = Modifier.height(50.dp))
+        Text("cnt - ${state.cnt}")
+        Spacer(modifier = Modifier.height(50.dp))
+        Row {
+            Box(
+                modifier = Modifier
+                    .background(Color.DarkGray)
+                    .padding(30.dp)
+            ) {
+                Text("down")
+            }
+            Spacer(modifier = Modifier.height(50.dp))
+            Box(
+                modifier = Modifier
+                    .background(Color.Gray)
+                    .padding(30.dp)
+                    .clickable { onAction.invoke(SampleAction.SendUp) }
+            ) {
+                Text("up")
+            }
+        }
+        Spacer(modifier = Modifier.weight(1f))
     }
 }

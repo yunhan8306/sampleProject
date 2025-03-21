@@ -2,6 +2,7 @@ package com.yunhan.presentation.sample
 
 import android.content.Context
 import androidx.lifecycle.viewModelScope
+import com.yunhan.domain.sample.usecase.SendUpUseCase
 import com.yunhan.presentation.base.BaseViewModel
 import com.yunhan.presentation.util.navigator.ActivityNavigator
 import com.yunhan.presentation.util.navigator.ActivityNavigatorType
@@ -11,6 +12,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SampleViewModel @Inject constructor(
+    private val sendUpUseCase: SendUpUseCase,
     private val activityNavigator: ActivityNavigator
 ) : BaseViewModel<SampleState, SampleSideEffect, SampleAction>(SampleState.init) {
 
@@ -29,6 +31,9 @@ class SampleViewModel @Inject constructor(
             is SampleAction.CancelLoading -> {
                 cancelJobList()
             }
+            is SampleAction.SendUp -> {
+                sendUp()
+            }
             else -> Unit
         }
     }
@@ -41,6 +46,12 @@ class SampleViewModel @Inject constructor(
             activityNavigator.navigateTo(context, ActivityNavigatorType.DETAIL)
                 .putExtra("from", sampleNavType.name)
                 .let { postSideEffect(SampleSideEffect.StartDetailActivity(it)) }
+        }
+    }
+
+    private fun sendUp() {
+        viewModelScope.intent {
+            reduce(currentState.copy(cnt = sendUpUseCase.invoke().cnt))
         }
     }
 
