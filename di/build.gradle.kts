@@ -10,6 +10,8 @@ android {
 
 dependencies {
     implementation(projects.presentation.sample)
+    implementation(projects.presentation.impl)
+    implementation(projects.presentation.util)
     implementation(projects.domain.sample)
     implementation(projects.data.sample)
 
