@@ -4,20 +4,31 @@ import android.content.Context
 import android.content.Intent
 import com.yunhan.presentation.base.BaseAction
 import com.yunhan.presentation.base.BaseSideEffect
-import com.yunhan.presentation.base.BaseStateImpl
+import com.yunhan.presentation.base.AbstractBaseState
 import com.yunhan.presentation.base.BaseStatus
+import com.yunhan.presentation.detail.DetailState
 
 data class SampleState(
-    val sampleNavType: SampleNavType = SampleNavType.TEST1,
-    val cnt: Int = 0,
-    override val status: BaseStatus = BaseStatus.Idle,
-): BaseStateImpl<SampleState>() {
+    override val status: BaseStatus,
+    override val isLoading: Boolean,
+    val sampleNavType: SampleNavType,
+    val cnt: Int
+): AbstractBaseState<SampleState>() {
     companion object {
-        val init = SampleState()
+        val init = SampleState(
+            status = BaseStatus.Idle,
+            isLoading = false,
+            sampleNavType = SampleNavType.TEST1,
+            cnt = 0
+        )
     }
 
-    override fun copyState(status: BaseStatus): SampleState {
+    override fun copyAndUpdateStatus(status: BaseStatus): SampleState {
         return copy(status = status)
+    }
+
+    override fun copyAndUpdateLoading(isLoading: Boolean): SampleState {
+        return copy(isLoading = isLoading)
     }
 }
 

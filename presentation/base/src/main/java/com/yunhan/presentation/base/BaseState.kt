@@ -5,15 +5,23 @@ interface BaseState {
     fun rendering(): BaseState
     fun complete(): BaseState
     fun error(): BaseState
+
+    val isLoading: Boolean
+    fun showLoading(): BaseState
+    fun hideLoading(): BaseState
 }
 
-abstract class BaseStateImpl<T : BaseState>(
+abstract class AbstractBaseState<T : BaseState>(
     override val status: BaseStatus = BaseStatus.Idle
 ) : BaseState {
-    abstract fun copyState(status: BaseStatus): T
-    override fun rendering(): T = copyState(BaseStatus.Rendering)
-    override fun complete(): T = copyState(BaseStatus.Complete)
-    override fun error(): T = copyState(BaseStatus.Error)
+    abstract fun copyAndUpdateStatus(status: BaseStatus): T
+    override fun rendering(): T = copyAndUpdateStatus(BaseStatus.Rendering)
+    override fun complete(): T = copyAndUpdateStatus(BaseStatus.Complete)
+    override fun error(): T = copyAndUpdateStatus(BaseStatus.Error)
+
+    abstract fun copyAndUpdateLoading(isLoading: Boolean): T
+    override fun showLoading(): T = copyAndUpdateLoading(true)
+    override fun hideLoading(): T = copyAndUpdateLoading(false)
 }
 
 sealed interface BaseStatus {

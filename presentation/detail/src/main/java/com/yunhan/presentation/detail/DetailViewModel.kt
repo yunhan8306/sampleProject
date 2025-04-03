@@ -20,15 +20,16 @@ class DetailViewModel @Inject constructor(
 
     override fun initFetch() {
         viewModelScope.fetch(
-            onStart = {
+            onAction = {
                 delay(1000)
             },
-            onRendering = {
-                delay(1000)
-            },
-            onComplete = {
-                reduce(currentState.copy(text = stateHandle.get<String>("from") ?: "error"))
+            onCompleted = {
+                reduce { copy(text = stateHandle.get<String>("from") ?: "error") }
             }
         )
+    }
+
+    init {
+        initFetch()
     }
 }

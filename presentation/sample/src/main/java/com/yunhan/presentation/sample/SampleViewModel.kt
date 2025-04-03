@@ -2,12 +2,14 @@ package com.yunhan.presentation.sample
 
 import android.content.Context
 import androidx.lifecycle.viewModelScope
+import androidx.test.core.app.ActivityScenario.launch
 import com.yunhan.domain.sample.usecase.SendUpUseCase
 import com.yunhan.presentation.base.BaseViewModel
 import com.yunhan.presentation.util.navigator.ActivityNavigator
 import com.yunhan.presentation.util.navigator.ActivityNavigatorType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -51,21 +53,23 @@ class SampleViewModel @Inject constructor(
 
     private fun sendUp() {
         viewModelScope.intent {
-            reduce(currentState.copy(cnt = sendUpUseCase.invoke().cnt))
+            val cnt = sendUpUseCase.invoke().cnt
+            reduce { copy(cnt = cnt) }
         }
     }
 
     override fun initFetch() {
         viewModelScope.fetch(
-            onStart = {
+            onAction = {
                 delay(3000)
             },
-            onRendering = {
-                delay(1000)
-            },
-            onComplete = {
-                reduce(currentState.copy(sampleNavType = sampleNavType))
+            onCompleted = {
+                reduce { copy(sampleNavType = sampleNavType) }
             }
         )
+    }
+
+    init {
+        initFetch()
     }
 }

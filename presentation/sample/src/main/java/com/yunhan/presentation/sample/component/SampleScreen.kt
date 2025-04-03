@@ -52,7 +52,6 @@ fun SampleRoute(
 
     val activity = LocalContext.current as ComponentActivity
     val state by viewModel.state.collectAsState()
-    val isShowLoading by viewModel.isShowLoading.collectAsState()
 
     LaunchedEffect(Unit) {
         viewModel.setSampleNav(sampleNavType)
@@ -84,7 +83,7 @@ fun SampleRoute(
     }
 
     CommonLoadingDialog(
-        isLoading = isShowLoading,
+        isLoading = state.isLoading,
         onDismiss = { viewModel.onAction(SampleAction.CancelLoading) }
     )
 }

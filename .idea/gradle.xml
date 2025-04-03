@@ -27,13 +27,13 @@
             <option value="$PROJECT_DIR$/build-logic/convention" />
             <option value="$PROJECT_DIR$/data" />
             <option value="$PROJECT_DIR$/data/sample" />
+            <option value="$PROJECT_DIR$/di" />
             <option value="$PROJECT_DIR$/domain" />
             <option value="$PROJECT_DIR$/domain/sample" />
             <option value="$PROJECT_DIR$/presentation" />
             <option value="$PROJECT_DIR$/presentation/base" />
             <option value="$PROJECT_DIR$/presentation/designsystem" />
             <option value="$PROJECT_DIR$/presentation/detail" />
-            <option value="$PROJECT_DIR$/presentation/di" />
             <option value="$PROJECT_DIR$/presentation/impl" />
             <option value="$PROJECT_DIR$/presentation/navigation" />
             <option value="$PROJECT_DIR$/presentation/sample" />

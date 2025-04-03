@@ -6,16 +6,11 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.concurrent.CopyOnWriteArrayList
@@ -26,30 +21,19 @@ abstract class BaseViewModel<STATE: BaseState, SIDE_EFFECT: BaseSideEffect, ACTI
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(initState)
-    val state: StateFlow<STATE> by lazy {
-        _state.onStart {
-            initFetch()
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000L),
-            initialValue = initState
-        )
-    }
+    val state = _state.asStateFlow()
 
     val currentState: STATE get() = state.value
 
     private val _sideEffect = MutableSharedFlow<SIDE_EFFECT>(extraBufferCapacity = 10)
     val sideEffect = _sideEffect.asSharedFlow()
 
-    private val _isShowLoading = MutableStateFlow(false)
-    val isShowLoading = _isShowLoading.asStateFlow()
-
     private val jobList = CopyOnWriteArrayList<Job>()
 
     open fun initFetch() {}
 
-    fun reduce(state: STATE) {
-        _state.update { state }
+    fun reduce(state: STATE.() -> STATE) {
+        _state.update(state)
     }
 
     suspend fun postSideEffect(sideEffect: SIDE_EFFECT) {
@@ -60,16 +44,15 @@ abstract class BaseViewModel<STATE: BaseState, SIDE_EFFECT: BaseSideEffect, ACTI
 
     fun CoroutineScope.intent(
         isShowLoading: Boolean = false,
-        onError: (Throwable) -> Unit = {},
-        onAction: suspend () -> Unit
+        onError: ((Throwable) -> Unit)? = null,
+        onAction: suspend CoroutineScope.() -> Unit
     ) {
         launch(
-            context = EmptyCoroutineContext + CoroutineExceptionHandler { _, throwable ->
-                if(throwable is CancellationException) return@CoroutineExceptionHandler
-                onError.invoke(throwable)
+            context = CoroutineExceptionHandler { _, throwable ->
+                onError?.invoke(throwable)
             }
         ) {
-            onAction.invoke()
+            onAction()
         }.let { job ->
             if(isShowLoading) {
                 jobList.offerJob(job)
@@ -82,29 +65,30 @@ abstract class BaseViewModel<STATE: BaseState, SIDE_EFFECT: BaseSideEffect, ACTI
 
     @Suppress("UNCHECKED_CAST")
     fun CoroutineScope.fetch(
-        onStart: suspend () -> Unit = {}, // api 호출, 로컬 데이터 세팅 등 초기 작업,
-        onRendering: suspend () -> Unit = {}, // 스켈레톤 등 렌더링 될 때 필요한 처리
-        onComplete: suspend () -> Unit = {}, // 세팅 후 처리
-        onError: (Throwable) -> Unit = {} // 세팅 오류 처리
+        onError: ((Throwable) -> Unit)? = null, // 세팅 오류 처리
+        onAction: suspend CoroutineScope.() -> Unit, // api 호출, 로컬 데이터 세팅 등 초기 작업,
+        onCompleted: (() -> Unit)? = null, // 세팅 후 처리
     ) {
         launch(
-            context = EmptyCoroutineContext + CoroutineExceptionHandler { _, throwable ->
-                onError.invoke(throwable)
+            context = CoroutineExceptionHandler { _, throwable ->
+                reduce { error() as STATE }
+                onError?.invoke(throwable)
             }
         ) {
-            launch {
-                coroutineScope {
-                    launch { onStart.invoke() }
-                    reduce(currentState.rendering() as STATE)
-                    onRendering.invoke()
-                }
-                reduce(currentState.complete() as STATE)
-            }.invokeOnCompletion {
-                launch { onComplete.invoke() }
+            reduce { rendering() as STATE }
+            onAction()
+        }.invokeOnCompletion { throwable ->
+            if(throwable != null) {
+                reduce { error() as STATE }
+                onError?.invoke(throwable)
+            } else {
+                reduce { complete() as STATE }
+                onCompleted?.invoke()
             }
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
     private fun MutableList<Job>.offerJob(
         job: Job
     ) {
@@ -113,17 +97,22 @@ abstract class BaseViewModel<STATE: BaseState, SIDE_EFFECT: BaseSideEffect, ACTI
                 add(job)
             }
             delay(1000)
-            _isShowLoading.tryEmit(isNotEmpty())
+            this@BaseViewModel.reduce {
+                if(isNotEmpty()) showLoading() as STATE else hideLoading() as STATE
+            }
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
     private fun MutableList<Job>.removeJob(
         job: Job
     ) {
         if(contains(job)) {
             remove(job)
         }
-        _isShowLoading.tryEmit(isNotEmpty())
+        this@BaseViewModel.reduce {
+            if(isNotEmpty()) showLoading() as STATE else hideLoading() as STATE
+        }
     }
 
     fun cancelJobList() {
